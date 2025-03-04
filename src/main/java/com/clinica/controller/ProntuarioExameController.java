@@ -2,6 +2,7 @@ package com.clinica.controller;
 
 import com.clinica.dto.ProntuarioExameDTO;
 import com.clinica.service.ProntuarioExameService;
+import com.clinica.service.impl.ProntuarioExameServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -73,6 +74,20 @@ public class ProntuarioExameController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao deletar prontuário: " + e.getMessage());
+        }
+    }
+
+    // Novo método para chamar o próximo exame da fila
+    @GetMapping("/chamarProximoPaciente")
+    public ResponseEntity<?> chamarProximoPaciente(
+            @RequestParam("matriculaProfisional") String matriculaProfisional,
+            @RequestParam("abrirProximeTo") Boolean abrirProximeTo) {
+
+        try {
+            service.buscarProximoFila(matriculaProfisional, abrirProximeTo);
+            return null;
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao chamar próximo exame: " + e.getMessage());
         }
     }
 }
