@@ -1,8 +1,8 @@
 package com.clinica.controller;
 
+import com.clinica.dto.FilaTriagemDTO;
 import com.clinica.dto.ProntuarioExameDTO;
 import com.clinica.service.ProntuarioExameService;
-import com.clinica.service.impl.ProntuarioExameServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -80,12 +80,11 @@ public class ProntuarioExameController {
     // Novo método para chamar o próximo exame da fila
     @GetMapping("/chamarProximoPaciente")
     public ResponseEntity<?> chamarProximoPaciente(
-            @RequestParam("matriculaProfisional") String matriculaProfisional,
-            @RequestParam("abrirProximeTo") Boolean abrirProximeTo) {
-
+            @RequestParam("matriculaProfisional") String matriculaProfisional) {
         try {
-            service.buscarProximoFila(matriculaProfisional, abrirProximeTo);
-            return null;
+            FilaTriagemDTO response = service.buscarProximoFila(matriculaProfisional);
+           return ResponseEntity.status(HttpStatus.OK).body(response);
+
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao chamar próximo exame: " + e.getMessage());
         }

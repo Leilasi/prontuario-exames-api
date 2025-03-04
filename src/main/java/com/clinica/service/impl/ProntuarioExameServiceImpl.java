@@ -72,7 +72,7 @@ public class ProntuarioExameServiceImpl  implements ProntuarioExameService {
     }
 
     @Override
-    public FilaTriagemDTO buscarProximoFila(String matriculaProfissional, Boolean abrirProximeTo) {
+    public FilaTriagemDTO buscarProximoFila(String matriculaProfissional) {
         ProfissionalExame profissional = profissionalExameRepository.findByMatricula(matriculaProfissional);
         exameConsumer.PROFISSIONAL_ALVO = profissional.getNome();
         FilaTriagemDTO filaTriagemDTO = exameConsumer.consumirFila();

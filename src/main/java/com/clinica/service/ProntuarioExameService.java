@@ -3,7 +3,6 @@ package com.clinica.service;
 import com.clinica.dto.FilaTriagemDTO;
 import com.clinica.dto.ProntuarioExameDTO;
 import com.clinica.model.ProntuarioExame;
-import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
@@ -15,6 +14,6 @@ import java.util.List;
     List<ProntuarioExame> buscarPorCpf(String cpf);
     ProntuarioExame atualizarProntuario(Long id, ProntuarioExameDTO prontuarioExameDTO);
     void deletarProntuario(Long id);
-    FilaTriagemDTO buscarProximoFila(String matriculaProfisional, Boolean abrirProximeTo);
+    FilaTriagemDTO buscarProximoFila(String matriculaProfisional);
 
 }
