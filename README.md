@@ -87,9 +87,18 @@ mvn spring-boot:run
   "grauConfiabilidade": 8
 }
 
+
+
 🧠 Melhorias futuras
 Integração com APIs externas de validação.
 Autenticação e autorização.
 Deploy em nuvem (AWS/GCP).
+
+## Contribuições
+Contribuições são bem-vindas! Sinta-se à vontade para abrir um **pull request** ou relatar problemas na aba de **issues**.
+
+---
+
+Feito com ❤️ por [Leila Fernanda da Silva]  [Estudante da Engenharia da Computação Univesp] 
 
 
