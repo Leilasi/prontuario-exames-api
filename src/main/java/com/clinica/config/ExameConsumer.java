@@ -1,7 +1,7 @@
 package com.clinica.config;
 
-import com.clinica.dto.FilaTriagemDTO;
-import com.clinica.exception.NoContentException;
+import com.clinica.dto.request.FilaTriagemRequestDTO;
+import com.clinica.utils.exception.NoContentException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -26,11 +26,11 @@ public class ExameConsumer {
     @Autowired
     private ObjectMapper objectMapper;
 
-    public FilaTriagemDTO consumirFila() {
-        List<FilaTriagemDTO> mensagens = new ArrayList<>();
-        FilaTriagemDTO selecionado = consumirPrimeiraMensagemFila(mensagens);
+    public FilaTriagemRequestDTO consumirFila() {
+        List<FilaTriagemRequestDTO> mensagens = new ArrayList<>();
+        FilaTriagemRequestDTO selecionado = consumirPrimeiraMensagemFila(mensagens);
 
-        for (FilaTriagemDTO msg : mensagens) {
+        for (FilaTriagemRequestDTO msg : mensagens) {
             rabbitTemplate.convertAndSend(FILA_CONSULTAS, msg);
         }
 
@@ -40,15 +40,15 @@ public class ExameConsumer {
         return selecionado;
     }
 
-    public FilaTriagemDTO consumirPrimeiraMensagemFila(List<FilaTriagemDTO> mensagens) {
-        FilaTriagemDTO selecionado = null;
+    public FilaTriagemRequestDTO consumirPrimeiraMensagemFila(List<FilaTriagemRequestDTO> mensagens) {
+        FilaTriagemRequestDTO selecionado = null;
 
         while (true) {
             Message message = rabbitTemplate.receive(FILA_CONSULTAS);
             if (message == null) break;
 
             try {
-                FilaTriagemDTO mensagem = objectMapper.readValue(message.getBody(), FilaTriagemDTO.class);
+                FilaTriagemRequestDTO mensagem = objectMapper.readValue(message.getBody(), FilaTriagemRequestDTO.class);
 
                 if (selecionado == null && PROFISSIONAL_ALVO.equals(mensagem.getNomeProfissional())) {
                     selecionado = mensagem;

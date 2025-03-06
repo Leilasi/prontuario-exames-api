@@ -1,9 +1,9 @@
-package com.clinica.dto;
+package com.clinica.dto.request;
 
 import java.io.Serial;
 import java.io.Serializable;
 
-public class FilaTriagemDTO implements Serializable {
+public class FilaTriagemRequestDTO implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -21,10 +21,10 @@ public class FilaTriagemDTO implements Serializable {
     private String tipoExame;
     private String matricula;
 
-    public FilaTriagemDTO() {
+    public FilaTriagemRequestDTO() {
     }
 
-    public FilaTriagemDTO(String nomePaciente, String cpfPaciente, String carteirinhaSus, String nomeProfissional, String sintomas, String pressaoArterial, String temperaturaCorporal, boolean prontoAtendimento, String observacao, String classificacaoRisco, String tipoExame, String matricula) {
+    public FilaTriagemRequestDTO(String nomePaciente, String cpfPaciente, String carteirinhaSus, String nomeProfissional, String sintomas, String pressaoArterial, String temperaturaCorporal, boolean prontoAtendimento, String observacao, String classificacaoRisco, String tipoExame, String matricula) {
         this.nomePaciente = nomePaciente;
         this.cpfPaciente = cpfPaciente;
         this.carteirinhaSus = carteirinhaSus;

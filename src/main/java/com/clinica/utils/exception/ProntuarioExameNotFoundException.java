@@ -1,4 +1,4 @@
-package com.clinica.exception;
+package com.clinica.utils.exception;
 
 public class ProntuarioExameNotFoundException extends RuntimeException {
 

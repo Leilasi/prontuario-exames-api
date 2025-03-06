@@ -1,13 +1,15 @@
 package com.clinica.service.impl;
 
 import com.clinica.config.ExameConsumer;
-import com.clinica.dto.FilaTriagemDTO;
-import com.clinica.dto.ProntuarioExameDTO;
+import com.clinica.dto.request.FilaTriagemRequestDTO;
+import com.clinica.dto.request.ProntuarioExameRequestDTO;
 import com.clinica.model.ProfissionalExame;
 import com.clinica.model.ProntuarioExame;
 import com.clinica.repository.ProfissionalExameRepository;
 import com.clinica.repository.ProntuarioExameRepository;
 import com.clinica.service.ProntuarioExameService;
+import com.clinica.utils.exception.EntidadeNaoEncontradaException;
+import com.clinica.utils.exception.FilaVaziaException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +27,7 @@ public class ProntuarioExameServiceImpl  implements ProntuarioExameService {
     private ProntuarioExameRepository repository;
 
     @Override
-    public void adicionarProntuario(ProntuarioExameDTO prontuarioExameDTO) {
+    public void adicionarProntuario(ProntuarioExameRequestDTO prontuarioExameDTO) {
         ProntuarioExame prontuarioExame = new ProntuarioExame();
         prontuarioExame.setCpfPaciente(prontuarioExameDTO.getCpfPaciente());
         prontuarioExame.setTipoExame(prontuarioExameDTO.getTipoExame());
@@ -51,7 +53,7 @@ public class ProntuarioExameServiceImpl  implements ProntuarioExameService {
     }
 
     @Override
-    public ProntuarioExame atualizarProntuario(Long id, ProntuarioExameDTO prontuarioExameDTO) {
+    public ProntuarioExame atualizarProntuario(Long id, ProntuarioExameRequestDTO prontuarioExameDTO) {
         ProntuarioExame prontuarioExame = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Prontuário não encontrado com o ID: " + id));
 
@@ -72,10 +74,16 @@ public class ProntuarioExameServiceImpl  implements ProntuarioExameService {
     }
 
     @Override
-    public FilaTriagemDTO buscarProximoFila(String matriculaProfissional) {
+    public FilaTriagemRequestDTO buscarProximoFila(String matriculaProfissional) throws FilaVaziaException, EntidadeNaoEncontradaException {
         ProfissionalExame profissional = profissionalExameRepository.findByMatricula(matriculaProfissional);
+        if (profissional == null) {
+            throw new EntidadeNaoEncontradaException("Não existe profissional de exame registrado com a matricula informada");
+        }
         exameConsumer.PROFISSIONAL_ALVO = profissional.getNome();
-        FilaTriagemDTO filaTriagemDTO = exameConsumer.consumirFila();
+        FilaTriagemRequestDTO filaTriagemDTO = exameConsumer.consumirFila();
+        if (filaTriagemDTO == null) {
+            throw new FilaVaziaException("Não há paciente aguardando na fila de espera");
+        }
         return filaTriagemDTO;
     }
 

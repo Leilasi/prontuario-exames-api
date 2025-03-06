@@ -1,29 +1,78 @@
 package com.clinica.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
+
 @Entity
+@Table(name = "prontuario_exame")
 public class ProntuarioExame {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String cpfPaciente;
-    private String tipoExame;
+    @ManyToOne
+    @JoinColumn(name = "paciente_id", nullable = true)
+    private Paciente paciente;
+
+    @ManyToOne
+    @JoinColumn(name = "exame_id", nullable = true)
+    private Exame exame;
+
+    @ManyToOne
+    @JoinColumn(name = "profissioanl_exame_id", nullable = true)
+    private ProfissionalExame profissionalExame;
+
+    @Column(name = "data_exame", nullable = false)
     private LocalDateTime dataExame;
+
+    @Column(name = "resultado", nullable = false)
     private String resultado;
 
-    public String getResultado() {
-        return resultado;
+    public ProntuarioExame() {
     }
 
-    public void setResultado(String resultado) {
+    public ProntuarioExame(Long id, Paciente paciente, Exame exame, ProfissionalExame profissionalExame, LocalDateTime dataExame, String resultado) {
+        this.id = id;
+        this.paciente = paciente;
+        this.exame = exame;
+        this.profissionalExame = profissionalExame;
+        this.dataExame = dataExame;
         this.resultado = resultado;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Paciente getPaciente() {
+        return paciente;
+    }
+
+    public void setPaciente(Paciente paciente) {
+        this.paciente = paciente;
+    }
+
+    public Exame getExame() {
+        return exame;
+    }
+
+    public void setExame(Exame exame) {
+        this.exame = exame;
+    }
+
+    public ProfissionalExame getProfissionalExame() {
+        return profissionalExame;
+    }
+
+    public void setProfissionalExame(ProfissionalExame profissionalExame) {
+        this.profissionalExame = profissionalExame;
     }
 
     public LocalDateTime getDataExame() {
@@ -34,27 +83,36 @@ public class ProntuarioExame {
         this.dataExame = dataExame;
     }
 
-    public String getTipoExame() {
-        return tipoExame;
+    public String getResultado() {
+        return resultado;
     }
 
-    public void setTipoExame(String tipoExame) {
-        this.tipoExame = tipoExame;
+    public void setResultado(String resultado) {
+        this.resultado = resultado;
     }
 
-    public String getCpfPaciente() {
-        return cpfPaciente;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ProntuarioExame that = (ProntuarioExame) o;
+        return Objects.equals(id, that.id);
     }
 
-    public void setCpfPaciente(String cpfPaciente) {
-        this.cpfPaciente = cpfPaciente;
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
+    @Override
+    public String toString() {
+        return "ProntuarioExame{" +
+                "id=" + id +
+                ", paciente=" + paciente +
+                ", exame=" + exame +
+                ", profissionalExame=" + profissionalExame +
+                ", dataExame=" + dataExame +
+                ", resultado='" + resultado + '\'' +
+                '}';
     }
 }

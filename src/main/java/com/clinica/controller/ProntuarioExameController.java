@@ -1,8 +1,10 @@
 package com.clinica.controller;
 
-import com.clinica.dto.FilaTriagemDTO;
-import com.clinica.dto.ProntuarioExameDTO;
+import com.clinica.dto.request.FilaTriagemRequestDTO;
+import com.clinica.dto.request.ProntuarioExameRequestDTO;
 import com.clinica.service.ProntuarioExameService;
+import com.clinica.utils.exception.EntidadeNaoEncontradaException;
+import com.clinica.utils.exception.FilaVaziaException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +18,7 @@ public class ProntuarioExameController {
     private ProntuarioExameService service;
 
     @PostMapping
-    public ResponseEntity<?> adicionarProntuario(@RequestBody ProntuarioExameDTO prontuarioExameDTO) {
+    public ResponseEntity<?> adicionarProntuario(@RequestBody ProntuarioExameRequestDTO prontuarioExameDTO) {
         try {
             service.adicionarProntuario(prontuarioExameDTO);
             return ResponseEntity.status(HttpStatus.CREATED).body("Prontuário adicionado com sucesso!");
@@ -55,7 +57,7 @@ public class ProntuarioExameController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> atualizarProntuario(@PathVariable Long id, @RequestBody ProntuarioExameDTO prontuarioExameDTO) {
+    public ResponseEntity<?> atualizarProntuario(@PathVariable Long id, @RequestBody ProntuarioExameRequestDTO prontuarioExameDTO) {
         try {
             return ResponseEntity.ok(service.atualizarProntuario(id, prontuarioExameDTO));
         } catch (RuntimeException e) {
@@ -77,16 +79,17 @@ public class ProntuarioExameController {
         }
     }
 
-    // Novo método para chamar o próximo exame da fila
     @GetMapping("/chamarProximoPaciente")
     public ResponseEntity<?> chamarProximoPaciente(
             @RequestParam("matriculaProfisional") String matriculaProfisional) {
+        FilaTriagemRequestDTO response = null;
         try {
-            FilaTriagemDTO response = service.buscarProximoFila(matriculaProfisional);
-           return ResponseEntity.status(HttpStatus.OK).body(response);
-
+            response = service.buscarProximoFila(matriculaProfisional);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } catch (FilaVaziaException | EntidadeNaoEncontradaException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao chamar próximo exame: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao processar requisição: " + e.getMessage());
         }
     }
 }

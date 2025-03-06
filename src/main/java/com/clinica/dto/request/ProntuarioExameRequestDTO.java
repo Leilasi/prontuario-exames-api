@@ -1,8 +1,8 @@
-package com.clinica.dto;
+package com.clinica.dto.request;
 
 import java.time.LocalDateTime;
 
-public class ProntuarioExameDTO {
+public class ProntuarioExameRequestDTO {
 
     private String cpfPaciente;
     private String tipoExame;
