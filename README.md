@@ -8,9 +8,10 @@ Este projeto é um protótipo de motor antifraude, desenvolvido em **Java com Sp
 
 - ✅ Cadastro de usuários com dados pessoais.
 - ✅ Validação dos dados informados e atribuição de uma nota de confiabilidade (de 0 a 10).
-- ✅ Persistência de dados utilizando banco em memória **H2**.
+- ✅ Persistência de dados utilizando banco em memória **H2**.Caso o perfil utilizado seja **test**.
+- ✅ Persistência de dados utilizando banco em memória **PostgreSQL**.Caso o perfil utilizado seja **dev**.
 - ✅ API REST documentada com **Swagger**.
-- ✅ Arquitetura baseada em **MVC**.
+- ✅ Arquitetura baseada em **Camadas**.
 
 ---
 
@@ -23,6 +24,8 @@ Este projeto é um protótipo de motor antifraude, desenvolvido em **Java com Sp
 - **Lombok**
 - **Swagger / SpringDoc (OpenAPI)**
 - **Maven**
+- **Docker**
+- **PostgreSQL**
 
 ---
 
