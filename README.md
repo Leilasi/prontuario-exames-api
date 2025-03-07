@@ -59,8 +59,12 @@ mvn clean install
 mvn spring-boot:run
 
 🗂️ Endpoints principais
-
-![image](https://github.com/user-attachments/assets/00fc630e-6a89-4752-b5a0-84a660ae76b1)
+Método	Rota	Descrição
+POST	/api/prontuario-exame/adicionarNovoProntuario	Adicionar um novo prontuário
+GET	/api/prontuario-exame/chamarProximoPaciente	Chamar próximo paciente
+GET	/api/prontuario-exame/buscarTodosProntuarios	Buscar todos os prontuários
+GET	/api/prontuario-exame/buscarProntuario	Buscar prontuário por ID
+GET	/api/prontuario-exame/buscarProntuarioPorCpf	Buscar prontuário por CPF
 
 🔍 Exemplo de Requisição (JSON)
 
