@@ -3,17 +3,26 @@ package com.clinica.service.impl;
 import com.clinica.config.ExameConsumer;
 import com.clinica.dto.request.FilaTriagemRequestDTO;
 import com.clinica.dto.request.ProntuarioExameRequestDTO;
+import com.clinica.dto.response.ProntuarioExameResponseDTO;
+import com.clinica.model.Exame;
+import com.clinica.model.Paciente;
 import com.clinica.model.ProfissionalExame;
 import com.clinica.model.ProntuarioExame;
+import com.clinica.repository.ExameRepository;
+import com.clinica.repository.PacienteRepository;
 import com.clinica.repository.ProfissionalExameRepository;
 import com.clinica.repository.ProntuarioExameRepository;
 import com.clinica.service.ProntuarioExameService;
 import com.clinica.utils.exception.EntidadeNaoEncontradaException;
 import com.clinica.utils.exception.FilaVaziaException;
+import com.clinica.utils.exception.NoContentException;
+import com.clinica.utils.mapper.ProntuarioExameMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+
 @Service
 public class ProntuarioExameServiceImpl  implements ProntuarioExameService {
 
@@ -26,14 +35,35 @@ public class ProntuarioExameServiceImpl  implements ProntuarioExameService {
     @Autowired
     private ProntuarioExameRepository repository;
 
+    @Autowired
+    private PacienteRepository pacienteRepository;
+
+    @Autowired
+    private ExameRepository exameRepository;
+
+    @Autowired
+    private ProntuarioExameMapper mapper;
+
+
     @Override
-    public void adicionarProntuario(ProntuarioExameRequestDTO prontuarioExameDTO) {
+    public ProntuarioExameResponseDTO adicionarProntuario(ProntuarioExameRequestDTO prontuarioExameDTO){
         ProntuarioExame prontuarioExame = new ProntuarioExame();
-        prontuarioExame.setCpfPaciente(prontuarioExameDTO.getCpfPaciente());
-        prontuarioExame.setTipoExame(prontuarioExameDTO.getTipoExame());
+        Paciente pacienteExistente = verificarPaciente(prontuarioExameDTO.getCpfPaciente());
+        Exame exameExistente = verificarTipoDeExameExistente(prontuarioExameDTO);
+        ProfissionalExame profissionalExame = verificarProfissional(prontuarioExameDTO.getMatricula());
+
+        if (pacienteExistente == null || exameExistente == null){
+            throw new EntidadeNaoEncontradaException("Paciente ou tipo de exame não encontrado");
+        }
+
+        prontuarioExame.setPaciente(pacienteExistente);
+        prontuarioExame.setExame(exameExistente);
         prontuarioExame.setDataExame(prontuarioExameDTO.getDataExame());
         prontuarioExame.setResultado(prontuarioExameDTO.getResultado());
+        prontuarioExame.setProfissionalExame(profissionalExame);
         repository.save(prontuarioExame);
+
+        return mapper.toResponseDTO(prontuarioExame);
     }
 
     @Override
@@ -48,29 +78,17 @@ public class ProntuarioExameServiceImpl  implements ProntuarioExameService {
     }
 
     @Override
-    public List<ProntuarioExame> buscarPorCpf(String cpf) {
-        return repository.findByCpfPaciente(cpf);
-    }
+    public List<ProntuarioExameResponseDTO> buscarPorCpf(String cpf) {
+        ProntuarioExame prontuarioExame = new ProntuarioExame();
+        Paciente paciente = verificarPaciente(cpf);
 
-    @Override
-    public ProntuarioExame atualizarProntuario(Long id, ProntuarioExameRequestDTO prontuarioExameDTO) {
-        ProntuarioExame prontuarioExame = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Prontuário não encontrado com o ID: " + id));
+        List<ProntuarioExame> prontuarioExames = repository.findByPaciente(paciente);
 
-        prontuarioExame.setCpfPaciente(prontuarioExameDTO.getCpfPaciente());
-        prontuarioExame.setTipoExame(prontuarioExameDTO.getTipoExame());
-        prontuarioExame.setDataExame(prontuarioExameDTO.getDataExame());
-        prontuarioExame.setResultado(prontuarioExameDTO.getResultado());
-
-        return repository.save(prontuarioExame);
-    }
-
-    @Override
-    public void deletarProntuario(Long id) {
-        if (!repository.existsById(id)) {
-            throw new RuntimeException("Prontuário não encontrado com o ID: " + id);
+        if(prontuarioExames.isEmpty()){
+            throw new NoContentException("Nenhum prontuário encontrado para o paciente com CPF: " + cpf);
         }
-        repository.deleteById(id);
+
+        return  mapper.toResponseDTOList(prontuarioExames);
     }
 
     @Override
@@ -87,6 +105,31 @@ public class ProntuarioExameServiceImpl  implements ProntuarioExameService {
         return filaTriagemDTO;
     }
 
+    private Paciente verificarPaciente(String cpf){
+        Paciente paciente =  pacienteRepository.findByCPF(cpf);
 
+        if (paciente == null) {
+            throw new EntidadeNaoEncontradaException("Paciente não encontrado com CPF: " + cpf);
+        }
 
+        return paciente;
+    }
+
+    private Exame verificarTipoDeExameExistente(ProntuarioExameRequestDTO prontuarioExameDTO){
+        Exame exame = exameRepository.findByTipoExame(prontuarioExameDTO.getTipoExame());
+
+        if (exame == null) {
+            throw new EntidadeNaoEncontradaException("Tipo de exame não encontrado: " + prontuarioExameDTO.getTipoExame());
+        }
+        return exameRepository.findByTipoExame(prontuarioExameDTO.getTipoExame());
+    }
+
+    private ProfissionalExame verificarProfissional(String matricula) {
+        ProfissionalExame profissional = profissionalExameRepository.findByMatricula(matricula);
+
+        if (profissional == null) {
+            throw new EntidadeNaoEncontradaException("Profissional de exame não encontrado com a matricula: " + matricula);
+        }
+        return profissional;
+    }
 }

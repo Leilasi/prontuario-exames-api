@@ -1,6 +1,6 @@
 package com.clinica.utils.exception;
 
-public class EntidadeNaoEncontradaException extends Exception {
+public class EntidadeNaoEncontradaException extends RuntimeException {
 
     public EntidadeNaoEncontradaException(String message) {
         super(message);

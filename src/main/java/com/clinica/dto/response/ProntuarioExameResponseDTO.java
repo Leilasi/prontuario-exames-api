@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 
 public class ProntuarioExameResponseDTO {
 
+    private Long id;
     private String cpfPaciente;
     private String tipoExame;
 
@@ -25,7 +26,8 @@ public class ProntuarioExameResponseDTO {
     public ProntuarioExameResponseDTO() {
     }
 
-    public ProntuarioExameResponseDTO(String cpfPaciente, String tipoExame, LocalDateTime dataExame, String resultado, String nomePaciente, String carteirinhaSus, String profissionalExame, LocalDate dataNascimento, String sexo, String responsavelPaciente) {
+    public ProntuarioExameResponseDTO(Long id, String cpfPaciente, String tipoExame, LocalDateTime dataExame, String resultado, String nomePaciente, String carteirinhaSus, String profissionalExame, LocalDate dataNascimento, String sexo, String responsavelPaciente) {
+        this.id = id;
         this.cpfPaciente = cpfPaciente;
         this.tipoExame = tipoExame;
         this.dataExame = dataExame;
@@ -36,6 +38,14 @@ public class ProntuarioExameResponseDTO {
         this.dataNascimento = dataNascimento;
         this.sexo = sexo;
         this.responsavelPaciente = responsavelPaciente;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getCpfPaciente() {
@@ -121,7 +131,8 @@ public class ProntuarioExameResponseDTO {
     @Override
     public String toString() {
         return "ProntuarioExameResponseDTO{" +
-                "cpfPaciente='" + cpfPaciente + '\'' +
+                "id=" + id +
+                ", cpfPaciente='" + cpfPaciente + '\'' +
                 ", tipoExame='" + tipoExame + '\'' +
                 ", dataExame=" + dataExame +
                 ", resultado='" + resultado + '\'' +

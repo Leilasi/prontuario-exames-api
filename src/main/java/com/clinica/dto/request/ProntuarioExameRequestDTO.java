@@ -8,6 +8,7 @@ public class ProntuarioExameRequestDTO {
     private String tipoExame;
     private LocalDateTime dataExame;
     private String resultado;
+    private String matricula;
 
     public String getCpfPaciente() {
         return cpfPaciente;
@@ -39,5 +40,13 @@ public class ProntuarioExameRequestDTO {
 
     public void setResultado(String resultado) {
         this.resultado = resultado;
+    }
+    
+    public String getMatricula() {
+        return matricula;
+    }
+    
+    public void setMatricula(String matricula) {
+        this.matricula = matricula;
     }
 }
