@@ -33,6 +33,8 @@ Após rodar o projeto, acesse a documentação interativa pelo Swagger:
 
 http://localhost:8080/swagger-ui.html
 
+Link do Deploy: https://prontuario-exames-api.onrender.com/swagger-ui/index.html#/
+
 ---
 
 ## 📦 Como rodar o projeto localmente
